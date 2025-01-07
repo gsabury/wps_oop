@@ -28,14 +28,23 @@ final class WPS_OOP
     {
         register_activation_hook(__FILE__, array($this, 'wps_activate'));
 
+        register_deactivation_hook(__FILE__, array($this, 'wps_deactivate'));
+
         add_action('admin_menu', array($this, 'wps_oop_admin_menu'));
 
         spl_autoload_register(array($this, 'autoload'));
 
-        // spl_autoload_register( array ( $this, 'autoload_settings' ) );
+        add_action('init', array($this, 'init_wps'));
 
+        $this->load_assets();
 
         $this->define_constants();
+
+    }
+
+    public function wps_oop_optimize_callback()
+    {
+        WPS_Optimizer::optimize();
     }
 
     public function wps_activate()
@@ -55,6 +64,13 @@ final class WPS_OOP
             $wps_oop_options['notification']['is_plugin_active'] = 0;
             add_option("wps_oop_options", $wps_oop_options);
         }
+
+        WPS_Optimizer::register();
+    }
+
+    public function wps_deactivate()
+    {
+        WPS_Optimizer::unregister();
     }
 
     public function __clone()
@@ -76,6 +92,15 @@ final class WPS_OOP
             'wps_oop_settings',
             array($this, 'wps_settings_page')
         );
+    }
+
+    public function init_wps()
+    {
+        // WPS_Optimizer::optimize();
+
+        add_action('wps_oop_optimize_event', array($this, 'wps_oop_optimize_callback'));
+
+        (new WPS_Ajax())->register_callback();
     }
 
     public function wps_settings_page()
@@ -117,6 +142,7 @@ final class WPS_OOP
         define('WPS_OOP_CLASS', trailingslashit(WPS_OOP_DIR . 'classes'));
         define('WPS_OOP_CONTRACT', trailingslashit(WPS_OOP_DIR . 'contracts'));
         define('WPS_OOP_GATEWAY', trailingslashit(WPS_OOP_DIR . 'gateways'));
+        define('WPS_JS_URL', trailingslashit(WPS_OOP_URL . 'assets/js'));
     }
 
     public function autoload($class)
@@ -135,6 +161,21 @@ final class WPS_OOP
                 }
             }
         }
+    }
+
+    public function load_assets()
+    {
+        add_action('admin_enqueue_scripts', array($this, 'load_scripts'));
+    }
+
+    public function  load_scripts()
+    {
+        wp_register_script('wps_oop_script', WPS_JS_URL . 'wps_oop.js', array('jquery'));
+        wp_localize_script('wps_oop_script', 'WPS', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'wp_nonce' => wp_create_nonce()
+        ));
+        wp_enqueue_script('wps_oop_script');
     }
 }
 

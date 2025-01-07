@@ -12,6 +12,10 @@
     </h2>
     <form action="" method="post">
         <?php $settings_pool[$current_tab]->load_body(); ?>
-        <?php submit_button('ذخیره تنظیمات'); ?>
+        <?php
+        if ($current_tab != "general") {
+            submit_button('Save Settings');
+        }
+        ?>
     </form>
 </div>
