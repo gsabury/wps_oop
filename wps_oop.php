@@ -40,13 +40,14 @@ final class WPS_OOP
 
     public function wps_activate()
     {
-        // add_role('finance_manager', __('Finance Manager', 'wps_oop'), array(
-        //     'read' => true,
-        //     'save_wps_oop_data' => true
-        // ));
-        //        $user_id = 1;
-        //        $user = new WP_User($user_id);
-        //        $user->add_cap('save_wps_oop_data');
+        add_role('finance_manager', __('Finance Manager', 'wps_oop'), array(
+            'read' => true,
+            'save_wps_oop_data' => true
+        ));
+               $user_id = 1;
+               $user = new WP_User($user_id);
+               $user->add_cap('save_wps_oop_data');
+            //    $user->remove_cap('save_wps_oop_data');
     }
 
     public function __clone()
