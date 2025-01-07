@@ -44,10 +44,17 @@ final class WPS_OOP
             'read' => true,
             'save_wps_oop_data' => true
         ));
-               $user_id = 1;
-               $user = new WP_User($user_id);
-               $user->add_cap('save_wps_oop_data');
-            //    $user->remove_cap('save_wps_oop_data');
+        $user_id = 1;
+        $user = new WP_User($user_id);
+        $user->add_cap('save_wps_oop_data');
+        //    $user->remove_cap('save_wps_oop_data');
+
+        $wps_oop_options = get_option("wps_oop_options");
+        if (empty($wps_oop_options)) {
+            $wps_oop_options['general']['is_plugin_active'] = 0;
+            $wps_oop_options['notification']['is_plugin_active'] = 0;
+            add_option("wps_oop_options", $wps_oop_options);
+        }
     }
 
     public function __clone()
@@ -74,7 +81,7 @@ final class WPS_OOP
     public function wps_settings_page()
     {
         // WPS_Settings::perform();
-        // $wps_options = WPS_Settings::load();
+        // $wps_options = WPS_Settings::load(); var_dump( $wps_options);
         // $optimizer_class_instance = WPS_Factory::build('optimizer');
         // $gateway_name = $_POST['gateway'];
         // $gateway = WPS_Factory::build('mellat');
@@ -91,11 +98,11 @@ final class WPS_OOP
             'notifications' => 'WPS_Settings_Notifications'
         ));
 
-        if(isset($_POST['submit'])){
+        if (isset($_POST['submit'])) {
             $tab_class = new $tabs[$current_tab];
             $tab_class->save_settings();
         }
-        
+
         $settings_pool = [];
         $current_tpl = NULL;
 

@@ -1,5 +1,6 @@
 <?php
-class WPS_Settings_Notifications extends WPS_Settings_Contract {
+class WPS_Settings_Notifications extends WPS_Settings_Contract
+{
     public  function get_name()
     {
         return 'notifications';
@@ -11,11 +12,17 @@ class WPS_Settings_Notifications extends WPS_Settings_Contract {
 
     public function load_body()
     {
-        include  WPS_OOP_TPL.'settings_notifications.php';
+        $wps_options = get_option('wps_oop_options');
+        include  WPS_OOP_TPL . 'settings_notifications.php';
     }
 
     public function save_settings()
     {
-        echo 'Hello From Notifications';
+        $wps_oop_options = get_option('wps_oop_options');
+
+        $wps_options['general']['is_plugin_active'] = $wps_oop_options['general']['is_plugin_active'];
+        $wps_options['notification']['is_plugin_active'] = isset($_POST['wps_oop_active_plugin']) ? 1 : 0;
+        
+        update_option('wps_oop_options', $wps_options);
     }
 }
