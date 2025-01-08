@@ -39,7 +39,6 @@ final class WPS_OOP
         $this->load_assets();
 
         $this->define_constants();
-
     }
 
     public function wps_oop_optimize_callback()
@@ -86,8 +85,8 @@ final class WPS_OOP
     public function wps_oop_admin_menu()
     {
         add_options_page(
-            'Optemize WordPress Posts',
-            'Optemize WordPress Posts',
+            __('Optemize WordPress Posts', 'wps_oop'),
+            __('Optemize WordPress Posts', 'wps_oop'),
             'manage_options',
             'wps_oop_settings',
             array($this, 'wps_settings_page')
@@ -99,6 +98,13 @@ final class WPS_OOP
         // WPS_Optimizer::optimize();
 
         add_action('wps_oop_optimize_event', array($this, 'wps_oop_optimize_callback'));
+
+        load_plugin_textdomain('wps_oop', false, dirname(plugin_basename(__FILE__)) . '/languages');
+
+        // $http = new WPS_Http_Handler();
+        // $url = "https://reqres.in/api/users";
+        // $users = $http->get($url, array());
+        // print_r($users->data);
 
         (new WPS_Ajax())->register_callback();
     }
@@ -173,7 +179,7 @@ final class WPS_OOP
         wp_register_script('wps_oop_script', WPS_JS_URL . 'wps_oop.js', array('jquery'));
         wp_localize_script('wps_oop_script', 'WPS', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'wp_nonce' => wp_create_nonce()
+            'wp_nonce' => wp_create_nonce('wps_save_general_settings')
         ));
         wp_enqueue_script('wps_oop_script');
     }

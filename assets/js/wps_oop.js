@@ -8,6 +8,7 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data: {
                 action: 'wps_save_general_settings',
+                security: WPS.wp_nonce,
                 plugin_is_active: $this.prop('checked')
             },
             success: function (response) { //console.log(response);

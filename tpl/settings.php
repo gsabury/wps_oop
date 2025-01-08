@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h1>WordPress Optemization Settings</h1>
+    <h1><?php _e("WordPress Optemization Settings:", 'wps_oop') ?></h1>
     <h2 class="nav-tab-wrapper">
         <?php foreach ($tabs as $tab_class): ?>
             <?php
@@ -12,9 +12,11 @@
     </h2>
     <form action="" method="post">
         <?php $settings_pool[$current_tab]->load_body(); ?>
+        <?php //wp_nonce_field('wps_oop_save_settings', '_wpnonce'); 
+        ?>
         <?php
         if ($current_tab != "general") {
-            submit_button('Save Settings');
+            submit_button(__('Save Settings', 'wps_oop'));
         }
         ?>
     </form>
